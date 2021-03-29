@@ -1,13 +1,16 @@
 <template>
   <div id="app">
-    <main-tab-bar></main-tab-bar>
+    <main-tab-bar>
+      
+    </main-tab-bar>
 
-    <router-view></router-view>
+    <router-view/>
+    
   </div>
 </template>
 
 <script>
-  import MainTabBar from 'content/tabbar/MainTabBar.vue'
+  import MainTabBar from 'content/mainTabbar/MainTabBar.vue'
 
   export default {
     components: {
@@ -22,6 +25,6 @@
 </script>
 
 <style scope="css">
-  @import "assets/css/base.css"
+  @import 'assets/css/base.css'
 
 </style>

@@ -20,7 +20,7 @@
       path: String,
       activeColor: {
         type: String,
-        default: "black"
+        default: 'blue'
       }
     },
     data () {
@@ -33,7 +33,7 @@
         return this.$route.path.indexOf(this.path) !== -1
       },
       activeStyle () {
-        return this.isActive ? {color: this.isActive} : {}
+        return this.isActive ? {color: this.activeColor} : {}
       }
     },
     methods: {
@@ -51,6 +51,7 @@
     text-align: center;
     height: 49px;
     font-size: 14px;
+    color: 
   }
 
   .tab-bar-item img {
@@ -59,4 +60,5 @@
     margin-top: 3px;
     vertical-align: middle;
   }
+  
 </style>
