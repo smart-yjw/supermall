@@ -6,9 +6,9 @@
     </div>
     <slot></slot>
     <div class="indicator">
-      <slot name="indicator" v-if="showIndicator&&slideCount>1">
+      <slot name="indicator" v-if="showIndicator && slideCount>1">
         <div v-for="(item,index) in slideCount" class="indi-item" 
-        :class="{active:index===currentIndex-1}" :key="index"></div>
+        :class="{active:index === currentIndex-1}" :key="index"></div>
       </slot>
     </div>
   </div>
@@ -109,7 +109,7 @@ export default {
       //如果大于1个，那么在前后分别添加一个slide
       if (this.slideCount > 1) {
         let cloneFirst = slidesEls[0].cloneNode(true)
-        let cloneLast = slidesEls[this.slidecount-1].cloneNode(true)
+        let cloneLast = slidesEls[this.slideCount-1].cloneNode(true)
         swiperEl.insertBefore(cloneLast, slidesEls[0])
         swiperEl.appendChild(cloneFirst)
         this.totalWidth = swiperEl.offsetWidth
@@ -121,17 +121,19 @@ export default {
 
     //拖动事件的处理
     touchStart (e) {
-      //如果正在滚动，不可以拖动
-      if (this.scrolling) return
-      //停止定时器
+      // 1.如果正在滚动，不可以拖动
+      if (this.scrolling) {
+        return
+      }
+      // 2.停止定时器
       this.stopTimer()
-      //保存开始滚动的位置
+      // 3.保存开始滚动的位置
       this.startX = e.touches[0].pageX
     },
     touchMove (e) {
       // 1.计算出用户拖动的距离
       this.currentX = e.touches[0].pageX
-      this.distance = this. currentx - this.startX
+      this.distance = this.currentX - this.startX
       let currentPosition = -this.currentIndex * this.totalWidth
       let moveDistance = this.distance + currentPosition
       // 2.设置当前的位置
@@ -150,7 +152,7 @@ export default {
         //向左移动超过0.5
         this.currentIndex ++
         // 3.移动到正确的位雪
-        this.scrollContent (-this. currentIndex * this.totalWidth);
+        this.scrollContent (-this.currentIndex * this.totalWidth);
         // 4.移动完成后重新开启定时器
         this.startTimer()
       }
@@ -176,10 +178,10 @@ export default {
 }
 </script>
 
-<style  scoped>
+<style scoped>
   #hy-swiper {
     overflow: hidden;
-    position: relative;
+    position: absolute;
   }
   .swiper {
     display: flex;
@@ -189,7 +191,7 @@ export default {
     justify-content: center;
     position: absolute;
     width: 100%;
-    bottom:8px;
+    bottom: 8px;
   }
   .indi-item {
     box-sizing: border-box;
