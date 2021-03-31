@@ -54,13 +54,13 @@ export default {
   methods: {
     //定时器操作
     startTimer () {
-      this.playeTimer = window.setInterval(() => {
+      this.playTimer = window.setInterval(() => {
         this.currentIndex ++
         this.scrollContent(-this.currentIndex * this.totalWidth)
       }, this.interval)
     },
     stopTimer () {
-      window.clearInterval(this.playeTimer)
+      window.clearInterval(this.playTimer)
     },
 
     //滚动到正确位置
@@ -80,7 +80,7 @@ export default {
     checkPositon () {
       window.setTimeout(() => {
         this.swiperStyle.transition = '0ms'
-        if ( this.currentIndex >= this.slideCount +1) {
+        if (this.currentIndex >= this.slideCount +1) {
           this.currentIndex = 1
           this.setTransform(-this.currentIndex * this.totalWidth)
         } else if (this.currentIndex <= 0) {
@@ -95,8 +95,8 @@ export default {
     //设置滚动的位置
     setTransform (position) {
       this.swiperStyle.transform = `translate3d(${position}px, 0, 0)`
-      this.swiperStyle['-webkit-transform'] =  `translate3d(${position}px), 0, 0`
-      this.swiperStyle['-ms-transform'] =  `translate3d(${position}px), 0, 0`
+      this.swiperStyle['-webkit-transform'] =  `translate3d(${position}px, 0, 0)`
+      this.swiperStyle['-ms-transform'] =  `translate3d(${position}px, 0, 0)`
     },
 
     //操作dom,在dom前后添加slide
@@ -160,7 +160,7 @@ export default {
 
     //控制上一个，下一个
     previous () {
-      this.changeItem( -1);
+      this.changeItem(-1)
     },
     next () {
       this.changeItem(1)
@@ -182,8 +182,11 @@ export default {
   #hy-swiper {
     overflow: hidden;
     position: absolute;
+    display: flex;
   }
   .swiper {
+    
+    overflow: hidden;
     display: flex;
   }
   .indicator {
