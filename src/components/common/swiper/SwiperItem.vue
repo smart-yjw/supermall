@@ -5,12 +5,9 @@
 </template>
 
 <script>
-export default {
-  data () {
-    return {
-    }
+  export default {
+    name: 'Slide'
   }
-}
 </script>
 
 <style scoped>
@@ -18,6 +15,7 @@ export default {
     width: 100%;
     flex-shrink: 0;
   }
+  
   .slide img {
     width: 100%
   }

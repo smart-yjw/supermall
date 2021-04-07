@@ -20,7 +20,7 @@
       path: String,
       activeColor: {
         type: String,
-        default: 'blue'
+        default: 'red'
       }
     },
     data () {
