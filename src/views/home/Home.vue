@@ -5,7 +5,9 @@
     <recommend :recommends="recommends"></recommend>
     <feature-view/>
     <tab-control class="tab-control" :titles="['流行','新款','精选']"/>
-
+    <goods-list :goods="goods['pop'].list">
+      
+    </goods-list>
     <ul>
       <li></li>
       <li></li>
@@ -115,40 +117,58 @@
 <script>
   import NavBar from 'common/navbar/NavBar'
   import TabControl from 'content/tabControl/TabControl.vue'
+  import GoodsList from 'content/goods/GoodsList'
 
   import HomeSwiper from './childComps/HomeSwiper'
   import Recommend from './childComps/Recommend'
   import FeatureView from './childComps/FeatureView.vue'
 
-  import {getHomeMultiData} from 'network/home'
+  import {getHomeMultiData, getHomeGoods} from 'network/home'
   
-  
-
   export default {
     components:{
       NavBar,
       HomeSwiper,
       Recommend,
       FeatureView,
-      TabControl
+      TabControl,
+      GoodsList
     },
-    props:{},
     data(){
       return {
         banners: [],//轮播图
-        recommends: []//推荐
+        recommends: [],//推荐
+        goods: { //商品数据
+          'pop': {page: 0, list: []}, //保存流行的商品数据
+          'news': {page: 0, list: []}, //保存新款的商品数据
+          'sell': {page: 0, list: []} //保存精选的商品数据
+        }
       }
     },
     watch:{},
     computed:{},
-    methods:{},
+    methods:{
+      getHomeMultiData (){
+        getHomeMultiData ().then (res => {
+          this.banners = res.data.data.banner.list;
+          this.recommends = res.data.data.recommend.list;
+        })
+      },
+      getHomeGoods (type) { //传入类型和页码
+        const page = this.goods[type].page+1
+        getHomeGoods (type,page).then (res => {
+          //console.log(res.data)
+          this.goods[type].list.push(...res.data.list)
+          this.goods[type].page += 1
+        })
+      }
+    },
     created(){
-      //请求数据
-      getHomeMultiData ().then (res => {
-        
-        this.banners = res.data.data.banner.list;
-        this.recommends = res.data.data.recommend.list;
-      })
+      this.getHomeMultiData //请求轮播图和推荐的数据
+      this.getHomeGoods ('pop') //请求流行商品数据
+      this.getHomeGoods ('news') //请求新款商品数据
+      this.getHomeGoods ('sell') //请求精选商品数据
+
     },
     mounted(){}
   }
