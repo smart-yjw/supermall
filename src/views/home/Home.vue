@@ -4,97 +4,11 @@
     <home-swiper :banners="banners"/>
     <recommend :recommends="recommends"></recommend>
     <feature-view/>
-    <tab-control class="tab-control" :titles="['流行','新款','精选']"/>
-    <goods-list :goods="goods['pop'].list">
+    <tab-control class="tab-control" :titles="['流行','新款','精选']" @tabClick="tabClick"/>
+    <goods-list :goods="goods[currentType].list">
       
     </goods-list>
     <ul>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
       <li></li>
       <li></li>
       <li></li>
@@ -140,33 +54,57 @@
         recommends: [],//推荐
         goods: { //商品数据
           'pop': {page: 0, list: []}, //保存流行的商品数据
-          'news': {page: 0, list: []}, //保存新款的商品数据
+          'new': {page: 0, list: []}, //保存新款的商品数据
           'sell': {page: 0, list: []} //保存精选的商品数据
-        }
+        },
+        currentType: 'pop'
       }
     },
     watch:{},
     computed:{},
     methods:{
+      /**
+       * 事件监听方法
+       */
+      tabClick (index) {
+        //console.log(index)
+        switch (index) {
+          case 0:
+            this.currentType = 'pop'
+            break
+          case 1:
+            this.currentType = 'new'
+            break
+          case 2:
+            this.currentType = 'sell'
+            break
+        }
+      },
+
+
+      /**
+       * 网络请求方法
+       */
       getHomeMultiData (){
         getHomeMultiData ().then (res => {
           this.banners = res.data.data.banner.list;
           this.recommends = res.data.data.recommend.list;
+          //console.log(res)
         })
       },
       getHomeGoods (type) { //传入类型和页码
         const page = this.goods[type].page+1
         getHomeGoods (type,page).then (res => {
-          //console.log(res.data)
-          this.goods[type].list.push(...res.data.list)
+          //console.log(res)
+          this.goods[type].list.push(...res.data.data.list)
           this.goods[type].page += 1
         })
       }
     },
     created(){
-      this.getHomeMultiData //请求轮播图和推荐的数据
+      this.getHomeMultiData () //请求轮播图和推荐的数据
       this.getHomeGoods ('pop') //请求流行商品数据
-      this.getHomeGoods ('news') //请求新款商品数据
+      this.getHomeGoods ('new') //请求新款商品数据
       this.getHomeGoods ('sell') //请求精选商品数据
 
     },
@@ -191,5 +129,6 @@
   .tab-control {
     position: sticky;
     top: 44px;
+    z-index: 8;
   }
 </style>
