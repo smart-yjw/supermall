@@ -1,44 +1,31 @@
 <template>
   <div id="home">
     <nav-bar class="home-nav"><div slot="center">购物街</div></nav-bar>
-    <home-swiper :banners="banners"/>
-    <recommend :recommends="recommends"></recommend>
-    <feature-view/>
-    <tab-control class="tab-control" :titles="['流行','新款','精选']" @tabClick="tabClick"/>
-    <goods-list :goods="goods[currentType].list">
-      
-    </goods-list>
-    <ul>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-    </ul>
-
+    
+    <scroll class="content" ref="scroll">
+      <home-swiper :banners="banners"></home-swiper>
+      <recommend :recommends="recommends"></recommend>
+      <feature-view></feature-view>
+      <tab-control class="tab-control" :titles="['流行','新款','精选']" @tabClick="tabClick"></tab-control>
+      <goods-list :goods="goods[currentType].list"></goods-list>
+    </scroll>
+    <back-top @click.native="backClick"></back-top>
   </div>
 </template>
 
 <script>
   import NavBar from 'common/navbar/NavBar'
+  import Scroll from 'common/scroll/Scroll'
   import TabControl from 'content/tabControl/TabControl.vue'
   import GoodsList from 'content/goods/GoodsList'
+  import BackTop from 'content/backTop/BackTop'
 
   import HomeSwiper from './childComps/HomeSwiper'
   import Recommend from './childComps/Recommend'
   import FeatureView from './childComps/FeatureView.vue'
 
   import {getHomeMultiData, getHomeGoods} from 'network/home'
-  
+
   export default {
     components:{
       NavBar,
@@ -46,7 +33,9 @@
       Recommend,
       FeatureView,
       TabControl,
-      GoodsList
+      GoodsList,
+      Scroll,
+      BackTop
     },
     data(){
       return {
@@ -57,7 +46,8 @@
           'new': {page: 0, list: []}, //保存新款的商品数据
           'sell': {page: 0, list: []} //保存精选的商品数据
         },
-        currentType: 'pop'
+        currentType: 'pop',
+        scroll: null
       }
     },
     watch:{},
@@ -80,7 +70,9 @@
             break
         }
       },
-
+      backClick () {
+        this.$refs.scroll.scrollTo(0, 0, 500)
+      },
 
       /**
        * 网络请求方法
@@ -108,13 +100,17 @@
       this.getHomeGoods ('sell') //请求精选商品数据
 
     },
-    mounted(){}
+    mounted(){
+      
+    }
   }
 </script>
   
 <style lang="css" scoped>
   #home {
     padding-top: 44px;
+    height: 100vh;
+    position: relative;
   }
   .home-nav {
     background-color: var(--color-tint);
@@ -126,9 +122,23 @@
     top: 0;
     z-index: 9;
   }
+
+
   .tab-control {
     position: sticky;
     top: 44px;
     z-index: 8;
+  }
+
+  .content {
+    position: absolute;
+    overflow: hidden;
+    top: 44px;
+    bottom: 49px;
+    left: 0;
+    right: 0;
+    /* height: calc(100% - 93px);
+    overflow: hidden; */
+    /* border: 5px solid red; */
   }
 </style>
