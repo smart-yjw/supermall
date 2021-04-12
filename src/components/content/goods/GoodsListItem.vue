@@ -1,6 +1,6 @@
 <template>
   <div class="goods-item">
-    <img :src="goodsItem.show.img" alt="">
+    <img :src="goodsItem.show.img" alt="" @load="imgLoad">
     <div class="goods-info">
       <p>{{goodsItem.title}}</p>
       <span class="price">{{goodsItem.price}}</span>
@@ -21,6 +21,15 @@ export default {
       default () {
         return {}
       }
+    }
+  },
+  methods: {
+    imgLoad () {
+      //console.log('imgLoad')
+
+      /**使用事件总线，将goodsListItem组件中的事件传递到非父组件
+         Home中：*/
+      this.$bus.$emit('itemImgLoad')
     }
   }
 }
@@ -65,6 +74,6 @@ export default {
     top: -1px;
     width: 14px;
     height: 14px;
-    background-color: url("~assets/img/common/collect.svg") 0 0/14px 14px;
+    background: url("~assets/img/common/collect.svg") 0 0/14px 14px;
   }
 </style>

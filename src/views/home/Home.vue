@@ -3,7 +3,7 @@
     <nav-bar class="home-nav"><div slot="center">购物街</div></nav-bar>
     
     <scroll class="content" ref="scroll" :probe-type="3" @backtopShown="backtopShown" 
-        :pull-up-load="true" @loadMore="loadMore">
+        :pull-up-load="true" >
       <home-swiper :banners="banners"></home-swiper>
       <recommend :recommends="recommends"></recommend>
       <feature-view></feature-view>
@@ -79,10 +79,7 @@
         //console.log(position)
         this.isShowBacktop = (-position.y) > 1000
       },
-      loadMore () {
-        //console.log('上拉加载')
-        getHomeGoods(this.currentType)
-      },
+      
 
       /**
        * 网络请求方法
@@ -96,13 +93,12 @@
       },
       getHomeGoods (type) { //传入类型和页码
         const page = this.goods[type].page + 1
-        console.log(page)
+        //console.log(page)
         getHomeGoods (type,page).then (res => {
           //console.log(res)
           this.goods[type].list.push(...res.data.data.list)
           this.goods[type].page += 1
 
-          this.$refs.scroll.scroll.finishPullUp()
         })
       }
     },
@@ -114,7 +110,11 @@
 
     },
     mounted(){
-      
+      //监听goodsListItem组件中的图片加载完成
+      this.$bus.$on('itemImgLoad', () => {
+        //console.log('-----')
+        this.$refs.scroll.refresh() //重新计算滚动高度
+      })
     }
   }
 </script>
@@ -128,7 +128,6 @@
   .home-nav {
     background-color: var(--color-tint);
     color: white;
-
     position: fixed;
     left: 0;
     right: 0;
