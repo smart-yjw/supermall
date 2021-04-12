@@ -2,14 +2,15 @@
   <div id="home">
     <nav-bar class="home-nav"><div slot="center">购物街</div></nav-bar>
     
-    <scroll class="content" ref="scroll">
+    <scroll class="content" ref="scroll" :probe-type="3" @backtopShown="backtopShown" 
+        :pull-up-load="true" @loadMore="loadMore">
       <home-swiper :banners="banners"></home-swiper>
       <recommend :recommends="recommends"></recommend>
       <feature-view></feature-view>
       <tab-control class="tab-control" :titles="['流行','新款','精选']" @tabClick="tabClick"></tab-control>
       <goods-list :goods="goods[currentType].list"></goods-list>
     </scroll>
-    <back-top @click.native="backClick"></back-top>
+    <back-top @click.native="backClick" v-show="isShowBacktop"></back-top>
   </div>
 </template>
 
@@ -46,8 +47,9 @@
           'new': {page: 0, list: []}, //保存新款的商品数据
           'sell': {page: 0, list: []} //保存精选的商品数据
         },
-        currentType: 'pop',
-        scroll: null
+        currentType: 'pop', //当前类型
+        scroll: null,
+        isShowBacktop: false 
       }
     },
     watch:{},
@@ -56,7 +58,7 @@
       /**
        * 事件监听方法
        */
-      tabClick (index) {
+      tabClick (index) { //监听3个tab的点击
         //console.log(index)
         switch (index) {
           case 0:
@@ -70,8 +72,16 @@
             break
         }
       },
-      backClick () {
+      backClick () { //监听点击回到顶部
         this.$refs.scroll.scrollTo(0, 0, 500)
+      },
+      backtopShown (position) { //监听滚动区域判断是否显示回到顶部按钮
+        //console.log(position)
+        this.isShowBacktop = (-position.y) > 1000
+      },
+      loadMore () {
+        //console.log('上拉加载')
+        getHomeGoods(this.currentType)
       },
 
       /**
@@ -85,11 +95,14 @@
         })
       },
       getHomeGoods (type) { //传入类型和页码
-        const page = this.goods[type].page+1
+        const page = this.goods[type].page + 1
+        console.log(page)
         getHomeGoods (type,page).then (res => {
           //console.log(res)
           this.goods[type].list.push(...res.data.data.list)
           this.goods[type].page += 1
+
+          this.$refs.scroll.scroll.finishPullUp()
         })
       }
     },
@@ -137,8 +150,10 @@
     bottom: 49px;
     left: 0;
     right: 0;
-    /* height: calc(100% - 93px);
-    overflow: hidden; */
-    /* border: 5px solid red; */
   }
+  /* .content {
+    height: calc(100% - 93px);
+    overflow: hidden;
+    margin-top: 44px;
+  } */
 </style>

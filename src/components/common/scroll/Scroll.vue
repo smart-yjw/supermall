@@ -10,7 +10,16 @@
   import BScroll from 'better-scroll'
   export default {
     components:{},
-    props:{},
+    props:{
+      probeType: {
+        type: Number,
+        default: 0
+      },
+      pullUpLoad: {
+        type: Boolean,
+        default: false
+      }
+    },
     data(){
       return {
         scroll: null
@@ -25,10 +34,24 @@
     },
     created(){},
     mounted(){
+      //创建BetterScroll对象
       this.scroll = new BScroll(this.$refs.wrapper, {
-        scrollY: true
+        click: true,
+        scrollY: true,
+        observeDOM: true,
+        probeType: this.probeType,
+        pullUpLoad: this.pullUpLoad
       })
-      //console.log(this.scroll)
+      //监听滚动的位置
+      this.scroll.on('scroll', (position) => {
+        //console.log(position)
+        this.$emit('backtopShown', position)
+      })
+      //监听上拉加载
+      this.scroll.on('pullingUp', () => {
+        //console.log('上拉加载')
+        this.$emit('loadMore')
+      })
     }
   }
 </script>
