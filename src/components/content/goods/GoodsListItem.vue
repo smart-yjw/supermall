@@ -1,5 +1,5 @@
 <template>
-  <div class="goods-item">
+  <div class="goods-item" @click="itemClick">
     <img :src="goodsItem.show.img" alt="" @load="imgLoad">
     <div class="goods-info">
       <p>{{goodsItem.title}}</p>
@@ -30,6 +30,10 @@ export default {
       /**使用事件总线，将goodsListItem组件中的事件传递到非父组件
          Home中：*/
       this.$bus.$emit('itemImgLoad')
+    },
+    itemClick () {
+      this.$router.push('/goodsdetail/' + this.goodsItem.iid)
+      console.log('点击了商品')
     }
   }
 }

@@ -1,7 +1,7 @@
 <template>
   <div id="home">
     <nav-bar class="home-nav"><div slot="center">购物街</div></nav-bar>
-    <tab-control ref="tabControl" :titles="['流行','新款','精选']" 
+    <tab-control ref="cpTabControl" :titles="['流行','新款','精选']" 
         @tabClick="tabClick" class="tabControlShown" v-show="isTabFixed"></tab-control>
 
     <scroll class="content" ref="scroll" :probe-type="3" @backtopShown="backtopShown" 
@@ -56,7 +56,8 @@
         scroll: null,
         isShowBacktop: false,
         tabControlOffsetTop: 0, //OffsetTop
-        isTabFixed: false //是否吸顶
+        isTabFixed: false, //是否吸顶
+        saveY: 0
       }
     },
     watch:{},
@@ -79,6 +80,8 @@
             this.currentType = 'sell' //精选
             break
         }
+        this.$refs.tabControl.currentIndex = index
+        this.$refs.cpTabControl.currentIndex = index
       },
       //2、监听点击回到顶部
       backClick () { 
@@ -101,7 +104,9 @@
       },
       //5、监听轮播图的加载
       swipperImgLoad () {
-        console.log(this.$refs.tabControl.$el.offsetTop)
+        //console.log(this.$refs.tabControl.$el.offsetTop)
+        this.tabControlOffsetTop = this.$refs.tabControl.$el.offsetTop
+        //console.log(this.tabControlOffsetTop)
       },
       
       /**
@@ -146,6 +151,19 @@
       //所有的组件都有一个属性$el,通过$el获取组件中的属性，这里获取tabControl的offsetTop
       //console.log(this.$refs.tabControl.$el.offsetTop)
       this.tabControlOffsetTop = this.$refs.tabControl.$el.offsetTop
+    },
+    destroyed () {
+      //console.log('离开了首页')
+    },
+    activated () {
+      this.$refs.scroll.scrollTo(0, this.saveY, 0)
+      this.$refs.scroll.refresh()
+      console.log(this.saveY)
+    },
+    deactivated () {
+      //console.log('deactivated')
+      this.saveY = this.$refs.scroll.getScrollY()
+      console.log(this.saveY)
     }
   }
 </script>

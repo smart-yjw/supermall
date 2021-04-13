@@ -29,16 +29,20 @@
     computed:{},
     methods:{
       //监听滚动位置
-      scrollTo (x, y, time=300) {
+      scrollTo (x, y, time = 300) {
         this.scroll && this.scroll.scrollTo(x, y, time) //逻辑与，非空才执行
       },
       //完成上拉加载
       finishPullUp () {
         this.scroll && this.scroll.finishPullUp()
       },
+      //重新计算可滚动高度
       refresh () {
-        this.scroll && this.scroll.refresh()
-        //console.log('监听refresh,计算滚动高度')
+        this.scroll && this.scroll.refresh() //监听refresh,计算滚动高度
+      },
+      //获取Y轴滚动的位置
+      getScrollY () {
+         return this.scroll ? this.scroll.y : 0 //有值返回，没有值返回0
       }
     },
     created(){},

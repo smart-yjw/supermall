@@ -1,10 +1,11 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 // which is lazy-loaded when the route is visited.
-const Home = () => import(/* webpackChunkName: "home" */ '../views/home/Home')
-const Category = () => import(/* webpackChunkName: "category" */ '../views/category/Category')
-const Shopcart = () => import(/* webpackChunkName: "shopcart" */ '../views/shopcart/Shopcart')
-const Profile = () => import(/* webpackChunkName: "profile" */ '../views/profile/Profile')
+const Home = () => import('../views/home/Home')
+const Category = () => import('../views/category/Category')
+const Shopcart = () => import( '../views/shopcart/Shopcart')
+const Profile = () => import('../views/profile/Profile')
+const GoodsDetail = () => import('../components/content/goods/GoodsDetail')
 
 
 Vue.use(VueRouter)
@@ -33,6 +34,11 @@ const routes = [
     path: '/profile',
     name: 'Profile',
     component: Profile
+  },
+  {
+    path: '/goodsdetail/:id',
+    name: 'GoodsDetail',
+    component: GoodsDetail
   }
 ]
 
