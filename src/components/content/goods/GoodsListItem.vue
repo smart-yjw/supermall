@@ -24,16 +24,16 @@ export default {
     }
   },
   methods: {
+    /**监听图片加载*/
     imgLoad () {
       //console.log('imgLoad')
-
-      /**使用事件总线，将goodsListItem组件中的事件传递到非父组件
-         Home中：*/
+      //使用事件总线，将goodsListItem组件中的事件传递到非父组件 Home中：
       this.$bus.$emit('itemImgLoad')
     },
+    /**跳转详情 */
     itemClick () {
       this.$router.push('/goodsdetail/' + this.goodsItem.iid)
-      console.log('点击了商品')
+      //console.log(this.goodsItem.iid)
     }
   }
 }

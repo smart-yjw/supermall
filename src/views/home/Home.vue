@@ -30,7 +30,7 @@
   import Recommend from './childComps/Recommend'
   import FeatureView from './childComps/FeatureView.vue'
 
-  import {getHomeMultiData, getHomeGoods} from 'network/home'
+  import {getHomeMultiData, getHomeGoods} from 'network/api'
 
   export default {
     components:{
@@ -113,19 +113,22 @@
        * 网络请求方法
        */
       getHomeMultiData (){
+        //获取轮播图和推荐的数据
         getHomeMultiData ().then (res => {
           this.banners = res.data.data.banner.list;
           this.recommends = res.data.data.recommend.list;
           //console.log(res)
         })
       },
+      //获取商品数据
       getHomeGoods (type) { //传入类型和页码
         const page = this.goods[type].page + 1
         //console.log(page)
         getHomeGoods (type,page).then (res => {
           //console.log(res)
-          this.goods[type].list.push(...res.data.data.list)
+          this.goods[type].list.push(...res.data.data.list) //(...)ES6展开运算符:依次取出数组的每个元素
           this.goods[type].page += 1
+
           //手动执行完成上拉加载更多
           this.$refs.scroll.finishPullUp()
         })
@@ -158,12 +161,12 @@
     activated () {
       this.$refs.scroll.scrollTo(0, this.saveY, 0)
       this.$refs.scroll.refresh()
-      console.log(this.saveY)
+      //console.log(this.saveY)
     },
     deactivated () {
       //console.log('deactivated')
       this.saveY = this.$refs.scroll.getScrollY()
-      console.log(this.saveY)
+      //console.log(this.saveY)
     }
   }
 </script>

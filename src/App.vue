@@ -3,7 +3,7 @@
 
     <main-tab-bar/>
 
-    <keep-alive>
+    <keep-alive exclude="GoodsDetail">
       <router-view/>
     </keep-alive>
     
@@ -11,7 +11,7 @@
 </template>
 
 <script>
-  import MainTabBar from 'components/content/mainTabbar/MainTabBar.vue'
+  import MainTabBar from 'components/content/mainTabbar/MainTabBar'
 
   export default {
     components: {
