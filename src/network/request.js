@@ -1,10 +1,11 @@
 import axios from 'axios'
 
+/** 根据axios封装的请求方法*/
 export function request (config) {
 
   //创建axios实例
   const instance = axios.create ({
-    baseURL: '',
+    baseURL: 'http://152.136.185.210:7878/api/m5',
     timeout: 5000
   })
 
