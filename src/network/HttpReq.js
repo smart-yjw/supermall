@@ -3,9 +3,10 @@ export function _httpReq (options) {
 
   this.url = options.url
   this.method = options.method
-  this.async = options.async
+  this.async = options.async || true
   this.data = options.data || ''
-  this.ContentType = options.ContentType
+  this.ContentType = options.ContentType || 'json'
+  this.callback = options.callback
 
   //创建一个XMLHttpRequest对象
   let xhr = new XMLHttpRequest() 
@@ -20,10 +21,10 @@ export function _httpReq (options) {
     xhr.setRequestHeader('Content-Type', this.ContentType)
     xhr.send(this.data) //将数据发送
   }
-  //这侧事件，监听请求状态
+  //注册事件，监听请求状态
   xhr.onreadystatechange = function () {
-    if (xhr.readyState === 4){
-      
+    if (xhr.readyState === 4 && xhr.status >= 200 && status < 300 || status == 304) {
+      this.callback(JSON.parse(xhr.response))
     }
   }
 
