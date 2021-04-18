@@ -1,6 +1,6 @@
 <template>
   <div class="goods">
-    <goods-list-item v-for="item in goods" :key="item.iid" :goodsItem="item"/>
+    <goods-list-item v-for="item in goods" :key="item.id" :goodsItem="item"/>
   </div>
 </template>
 
@@ -8,6 +8,7 @@
  import GoodsListItem from './GoodsListItem'
 
   export default {
+    name: 'GoodsList',
     components: {GoodsListItem},
     data () {
       return {

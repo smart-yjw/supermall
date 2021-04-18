@@ -25,7 +25,7 @@
         ajax.send()
         ajax.onreadystatechange = function () {
           ajax.onload = function(){
-              console.log(JSON.parse(ajax.responseText))
+              //console.log(JSON.parse(ajax.responseText))
               
             }
         }

@@ -15,6 +15,7 @@
 <script>
 import NavBar from 'components/common/navbar/NavBar'
 export default {
+  name: 'DetailNavBar',
   components: { NavBar },
   data () {
     return {

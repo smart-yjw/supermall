@@ -13,6 +13,7 @@
 export default {
   components:{},
   props:{
+    //首页传递过来的3个title
     titles: {
       type: Array,
       default () {
@@ -28,6 +29,7 @@ export default {
   watch:{},
   computed:{},
   methods:{
+    //监听3个title的点击
     itemClick (index) {
       this.currentIndex = index
       this.$emit('tabClick',index)

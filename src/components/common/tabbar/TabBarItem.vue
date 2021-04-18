@@ -1,6 +1,5 @@
 <template>
   <div class="tab-bar-item" @click="itemClick">
-
     <div v-if="!isActive">
       <slot name="item-icon"></slot>
     </div>
@@ -10,7 +9,6 @@
     <div :style="activeStyle">
       <slot name="item-text"></slot>
     </div>
-
   </div>
 </template>
 
@@ -29,14 +27,19 @@
       }
     },
     computed: {
+      //isActive为true，表示点击了当前所在tabbar
       isActive () {
+        //根据this.path判断点击了哪个tabbar
+        //indexOf()返回指定字符串第一次出现的位置，-1说明没有
         return this.$route.path.indexOf(this.path) !== -1
       },
+      //选中后设置样式
       activeStyle () {
         return this.isActive ? {color: this.activeColor} : {}
       }
     },
     methods: {
+      //监听tabbar的点击，跳转相应的路由
       itemClick () {
         this.$router.replace(this.path)
       }

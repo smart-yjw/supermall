@@ -11,6 +11,7 @@
 
 <script>
 export default {
+  name: 'GoodsListItem',
   data () {
     return {
     }
@@ -32,7 +33,14 @@ export default {
     },
     /**跳转详情 */
     itemClick () {
-      this.$router.push('/goodsdetail/' + this.goodsItem.iid)
+      //this.$router.push('/goodsdetail/' + this.goodsItem.iid)
+      //通过路由跳转详情页，通过query传递参数
+      this.$router.push({
+        path: '/goodsdetail',
+        query: {
+          iid: this.goodsItem.iid
+        }
+      })
       //console.log(this.goodsItem.iid)
     }
   }

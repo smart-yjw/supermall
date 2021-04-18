@@ -18,7 +18,10 @@ const routes = [
   {
     path: '/home',
     name: 'Home',
-    component: Home
+    component: Home,
+    meta: {
+      keepAlive: true
+    }
   },
   {
     path: '/category',
@@ -36,7 +39,7 @@ const routes = [
     component: Profile
   },
   {
-    path: '/goodsdetail/:iid',
+    path: '/goodsdetail',
     name: 'GoodsDetail',
     component: GoodsDetail
   }

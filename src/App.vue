@@ -4,7 +4,7 @@
     <main-tab-bar/>
 
     <keep-alive exclude="GoodsDetail">
-      <router-view/>
+      <router-view></router-view>
     </keep-alive>
     
   </div>
@@ -21,6 +21,8 @@
       return {
         
       }
+    },
+    mounted(){
     }
   }
 </script>

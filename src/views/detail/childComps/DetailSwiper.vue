@@ -11,6 +11,7 @@
 import {Swiper,SwiperItem} from 'components/common/swiper'
 
   export default {
+    name: 'DetailSwiper',
     props: {
       topImages: {
         type: Array,

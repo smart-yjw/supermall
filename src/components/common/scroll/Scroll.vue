@@ -40,7 +40,7 @@
       refresh () {
         this.scroll && this.scroll.refresh() //监听refresh,计算滚动高度
       },
-      //获取Y轴滚动的位置
+      //返回Y轴滚动的位置
       getScrollY () {
          return this.scroll ? this.scroll.y : 0 //有值返回，没有值返回0
       }
@@ -50,7 +50,6 @@
       //1.创建BetterScroll对象
       this.scroll = new BScroll(this.$refs.wrapper, {
         click: true,
-        scrollY: true,
         observeDOM: true,
         probeType: this.probeType,
         pullUpLoad: this.pullUpLoad
@@ -60,10 +59,10 @@
       if (this.props === 2 || this.probeType === 3) {
         this.scroll.on('scroll', (position) => {
           //console.log(position)
-          this.$emit('backtopShown', position) //发射自定义事件然后在首页监听
+          this.$emit('getScrollPosition', position) //发射自定义事件然后在首页监听
         })
       }
-      //3.监听scroll滚动位置
+      //3.监听是否滚动到底部
       if (this.pullUpLoad) {
         this.scroll.on('pullingUp', () => {
           //console.log('滚动到底部了')

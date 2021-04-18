@@ -1,16 +1,15 @@
 <template>
-  <div id="home">
+  <div id="home" v-if="$route.meta.keepAlive">
     <nav-bar class="home-nav"><div slot="center">购物街</div></nav-bar>
     <tab-control ref="cpTabControl" :titles="['流行','新款','精选']" 
         @tabClick="tabClick" class="tabControlShown" v-show="isTabFixed"></tab-control>
 
-    <scroll class="content" ref="scroll" :probe-type="3" @backtopShown="backtopShown" 
+    <scroll class="content" ref="scroll" :probe-type="3" @getScrollPosition="getScrollPosition" 
         :pull-up-load="true" @pullingUp="loadMore">
       <home-swiper :banners="banners" @swipperImgLoad="swipperImgLoad"></home-swiper>
       <recommend :recommends="recommends"></recommend>
       <feature-view></feature-view>
-      <tab-control ref="tabControl" :titles="['流行','新款','精选']" 
-        @tabClick="tabClick"></tab-control>
+      <tab-control ref="tabControl" :titles="['流行','新款','精选']" @tabClick="tabClick"></tab-control>
       <goods-list :goods="goods[currentType].list"></goods-list>
     </scroll>
     <back-top @click.native="backClick" v-show="isShowBacktop"></back-top>
@@ -33,6 +32,7 @@
   import {getHomeMultiData, getHomeGoods} from 'network/api'
 
   export default {
+    name: 'Home',
     components:{
       NavBar,
       HomeSwiper,
@@ -87,8 +87,8 @@
       backClick () { 
         this.$refs.scroll.scrollTo(0, 0, 500)
       },
-      //3、监听滚动区域
-      backtopShown (position) { 
+      //3、监听滚动位置
+      getScrollPosition (position) { 
         //console.log(position)
         /*滚动超过1000显示回到顶部按钮*/
         this.isShowBacktop = (-position.y) > 1000 
@@ -135,6 +135,8 @@
       }
     },
     created(){
+      //console.log('home create')
+      //console.log(this.$route.meta)
       this.getHomeMultiData () //请求轮播图和推荐的数据
       this.getHomeGoods ('pop') //请求流行商品数据
       this.getHomeGoods ('new') //请求新款商品数据
@@ -151,19 +153,18 @@
         refresh()
       })
       //2.获取tabControl的offsetTop
-      //所有的组件都有一个属性$el,通过$el获取组件中的属性，这里获取tabControl的offsetTop
+      //所有的组件都有一个属性$el,通过$el获取组件中的属性，这里获取tabControl的offsetTop位置
       //console.log(this.$refs.tabControl.$el.offsetTop)
       this.tabControlOffsetTop = this.$refs.tabControl.$el.offsetTop
     },
-    destroyed () {
-      //console.log('离开了首页')
-    },
     activated () {
+      //回来时设置滚动的位置
       this.$refs.scroll.scrollTo(0, this.saveY, 0)
       this.$refs.scroll.refresh()
       //console.log(this.saveY)
     },
     deactivated () {
+      //离开时记录滚动的位置
       //console.log('deactivated')
       this.saveY = this.$refs.scroll.getScrollY()
       //console.log(this.saveY)
@@ -179,22 +180,7 @@
   .home-nav {
     background-color: var(--color-tint);
     color: white;
-
-    /* 原生滚动时应用的样式
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: 0;
-    z-index: 9; */
   }
-
-
-  /* .tab-control {
-    position: sticky;
-    top: 44px;
-    z-index: 8;
-  } */
-
   .content {
     position: absolute;
     overflow: hidden;
@@ -203,14 +189,9 @@
     left: 0;
     right: 0;
   }
-  /* .content {
-    height: calc(100% - 93px);
-    overflow: hidden;
-    margin-top: 44px;
-  } */
-
   .tabControlShown {
     position: relative;
+    top: -1px;
     z-index: 9;
   }
 </style>
