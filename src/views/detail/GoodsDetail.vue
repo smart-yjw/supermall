@@ -14,8 +14,8 @@
       <detail-param-info :paramInfo="paramInfo"></detail-param-info>
       <!-- 商品评论信息 -->
       <detail-comment-info :commentInfo="commentInfo"></detail-comment-info>
-      <!-- 商品推荐信息 -->
-      <goods-list :recommendList="recommendList"></goods-list>
+      <!-- 商品推荐信息,复用goods-list -->
+      <goods-list :goods="recommendList"></goods-list>
 
     </scroll>
   </div>
@@ -45,7 +45,7 @@ import GoodsList from '../../components/content/goods/GoodsList.vue'
         DetailGoodsInfo,
         DetailParamInfo,
         DetailCommentInfo,
-        GoodsList
+        GoodsList,
     },
     props:{},
     data(){
@@ -85,10 +85,10 @@ import GoodsList from '../../components/content/goods/GoodsList.vue'
         //获取评论信息
         this.commentInfo = data.rate.list[0];
       })
-      //获取商品推荐信息
+      //获取商品推荐信息，因为和首页商品一样，这里接口只返回了固定的24条数据
       getRecommend().then((res, error) => {
         if (error) return
-        this.recommendList = res.data.list
+        this.recommendList = res.data.data.list
         console.log(res)
       })
     },
