@@ -1,6 +1,6 @@
 <template>
   <div class="goods-item" @click="itemClick">
-    <img :src="showImage" alt="" @load="imgLoad">
+    <img :src="showImage" alt="" @load="goodsImgLoad">
     <div class="goods-info">
       <p>{{goodsItem.title}}</p>
       <span class="price">{{goodsItem.price}}</span>
@@ -32,10 +32,16 @@ export default {
   },
   methods: {
     /**监听图片加载*/
-    imgLoad () {
-      //console.log('imgLoad')
+    goodsImgLoad () {
       //使用事件总线，将goodsListItem组件中的事件传递到非父组件 Home中：
-      this.$bus.$emit('itemImgLoad')
+      this.$bus.$emit('goodsImgLoad')
+      //console.log('imgLoad')
+      // if (this.$route.path.indexOf('/home')) {//监听首页商品图片加载
+      //   this.$bus.$emit('homeGoodsImgLsn')
+      // } else if (this.$route.path.indexOf('/goodsdetail')) {//监听详情页商品图片加载
+      //   this.$bus.$emit('goodsDetailImgLsn')
+      // }
+
     },
     /**跳转详情 */
     itemClick () {

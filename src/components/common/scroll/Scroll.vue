@@ -38,6 +38,7 @@
       },
       //重新计算可滚动高度
       refresh () {
+        console.log("--")
         this.scroll && this.scroll.refresh() //监听refresh,计算滚动高度
       },
       //返回Y轴滚动的位置

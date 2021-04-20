@@ -8,7 +8,7 @@
     </div>
     <div class="info-key">{{detailInfo.detailImage[0].key}}</div>
     <div class="info-list">
-      <img v-for="(item, index) in detailInfo.detailImage[0].list" :src="item" :key="index" alt="">
+      <img v-for="(item, index) in detailInfo.detailImage[0].list" :src="item" :key="index" @load="detailImgLoad" alt="">
     </div>
   </div>
 </template>
@@ -19,6 +19,12 @@
     props: {
       detailInfo: {
         type: Object
+      }
+    },
+    methods: {
+      detailImgLoad () {
+        //console.log('detailimgload')
+        this.$emit('detailImgLoad')
       }
     }
 	}

@@ -19,7 +19,7 @@
 <script>
   import NavBar from 'components/common/navbar/NavBar'
   import Scroll from 'components/common/scroll/Scroll'
-  import {debounce} from 'common/Utils'
+  import {goodsImgLsnMixin} from 'common/Mixin'
 
   import TabControl from 'components/content/tabControl/TabControl.vue'
   import GoodsList from 'components/content/goods/GoodsList'
@@ -43,6 +43,7 @@
       Scroll,
       BackTop
     },
+    mixins: [goodsImgLsnMixin],
     data(){
       return {
         banners: [],//轮播图
@@ -57,7 +58,10 @@
         isShowBacktop: false,
         tabControlOffsetTop: 0, //OffsetTop
         isTabFixed: false, //是否吸顶
-        saveY: 0
+        saveY: 0, //离开时滚动的位置
+        saveCurrentIndex: 0, //离开时保存当前tabControl
+        goodsImgLsn: null //商品图片监听函数
+
       }
     },
     watch:{},
@@ -82,6 +86,7 @@
         }
         this.$refs.tabControl.currentIndex = index
         this.$refs.cpTabControl.currentIndex = index
+        this.saveCurrentIndex = index
       },
       //2、监听点击回到顶部
       backClick () { 
@@ -144,30 +149,41 @@
 
     },
     mounted(){
-      //1.图片加载事件监听
-      const refresh = debounce(this.$refs.scroll.refresh, 50)
-      //监听goodsListItem组件中的图片加载完成 -> 调用refresh()
-      this.$bus.$on('itemImgLoad', () => {
-        //console.log('refresh')
-        //this.$refs.scroll.refresh() //重新计算滚动高度
-        refresh()
-      })
+      //1.图片加载事件监听,混入到mixin中了
+      // const refresh = debounce(this.$refs.scroll.refresh, 50)
+      // //监听goodsListItem组件中的图片加载完成 -> 调用refresh()
+      // this.homeGoodsImgLsn = () => {
+      //   //console.log('refresh')
+      //   //this.$refs.scroll.refresh() //重新计算滚动高度
+      //   refresh()
+      // }
+      // //通过事件总线监听首页商品图片的加载
+      // this.$bus.$on('goodsImgLoad', this.homeGoodsImgLsn)
+      
       //2.获取tabControl的offsetTop
       //所有的组件都有一个属性$el,通过$el获取组件中的属性，这里获取tabControl的offsetTop位置
       //console.log(this.$refs.tabControl.$el.offsetTop)
       this.tabControlOffsetTop = this.$refs.tabControl.$el.offsetTop
     },
     activated () {
-      //回来时设置滚动的位置
+      //1.回来时设置滚动的位置
       this.$refs.scroll.scrollTo(0, this.saveY, 0)
       this.$refs.scroll.refresh()
-      //console.log(this.saveY)
+      //console.log('activated')
+      //console.log(this.saveCurrentIndex)
+      //2.回来时设置tabControl
+      this.$refs.tabControl.currentIndex = this.saveCurrentIndex
+      this.$refs.cpTabControl.currentIndex = this.saveCurrentIndex
     },
     deactivated () {
-      //离开时记录滚动的位置
-      //console.log('deactivated')
+      //1.离开时记录滚动的位置
       this.saveY = this.$refs.scroll.getScrollY()
+      //console.log('deactivated')
+      //console.log(this.saveCurrentIndex)
+    
       //console.log(this.saveY)
+      //2.取消全局事件的监听
+      this.$bus.$off('goodsImgLoad', this.goodsImgLsn)
     }
   }
 </script>

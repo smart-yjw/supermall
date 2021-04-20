@@ -1,7 +1,7 @@
 <template>
   <div id="detail">
     <detail-nav-bar class="detail-nav"></detail-nav-bar>
-    <scroll class="content">
+    <scroll class="content" ref="scroll">
       <!-- 顶部轮播图 -->
       <detail-swiper :topImages="topImages"></detail-swiper>
       <!-- 详情标题，价格 -->
@@ -9,7 +9,7 @@
       <!-- 店铺信息 -->
       <detail-shop-info :shop="shop"></detail-shop-info>
       <!-- 穿着效果 -->
-      <detail-goods-info :detailInfo="detailInfo"></detail-goods-info>
+      <detail-goods-info :detailInfo="detailInfo" @detailImgLoad="detailImgLoad"></detail-goods-info>
       <!-- 商品参数信息 -->
       <detail-param-info :paramInfo="paramInfo"></detail-param-info>
       <!-- 商品评论信息 -->
@@ -28,11 +28,12 @@ import DetailNavBar from './childComps/DetailNavBar.vue'
 import DetailSwiper from './childComps/DetailSwiper.vue'
 import DetailBaseInfo from './childComps/DetailBaseInfo.vue'
 import DetailShopInfo from './childComps/DetailShopInfo.vue'
-import Scroll from '../../components/common/scroll/Scroll.vue'
 import DetailGoodsInfo from './childComps/DetailGoodsInfo.vue'
 import DetailParamInfo from './childComps/DetailParamInfo.vue'
 import DetailCommentInfo from './childComps/DetailCommentInfo.vue'
-import GoodsList from '../../components/content/goods/GoodsList.vue'
+import GoodsList from 'components/content/goods/GoodsList.vue'
+import Scroll from 'components/common/scroll/Scroll.vue'
+import {goodsImgLsnMixin} from 'common/Mixin'
 
   export default {
     name: 'GoodsDetail',
@@ -47,6 +48,7 @@ import GoodsList from '../../components/content/goods/GoodsList.vue'
         DetailCommentInfo,
         GoodsList,
     },
+    mixins: [goodsImgLsnMixin],
     props:{},
     data(){
       return {
@@ -57,12 +59,18 @@ import GoodsList from '../../components/content/goods/GoodsList.vue'
         detailInfo: {},
         paramInfo: {},
         commentInfo: {},
-        recommendList: []
+        recommendList: [],
+        goodsImgLsn: null //监听图片加载函数
       }
     },
     watch:{},
     computed:{},
-    methods:{},
+    methods:{
+      detailImgLoad () {
+        //console.log('++')
+        this.scrollRefresh()
+      }
+    },
     created(){
       //保存路由传递过来的参数
       this.iid = this.$route.query.iid
@@ -88,14 +96,22 @@ import GoodsList from '../../components/content/goods/GoodsList.vue'
       //获取商品推荐信息，因为和首页商品一样，这里接口只返回了固定的24条数据
       getRecommend().then((res, error) => {
         if (error) return
-        this.recommendList = res.data.data.list
-        console.log(res)
+        //sthis.recommendList = res.data.data.list
+        //console.log(res)
       })
     },
-    destroyed () {
-      //console.log('detail destroyed')
+    mounted(){//以下代码混入到mixin中了
+      // let scrollRefresh = debounce(this.$refs.scroll.refresh(), 100)
+      // this.goodsImgLsn = () => {
+      //   scrollRefresh
+      // }
+      // this.$bus.$on('goodsImgLoad', this.goodsImgLsn)
+      // console.log('mounted')
     },
-    mounted(){}
+    destroyed () {
+      this.$bus.$off('goodsImgLoad', this.goodsImgLsn)
+      //console.log('detail destroyed')
+    }
   }
 </script>
   
