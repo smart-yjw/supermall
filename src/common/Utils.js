@@ -1,10 +1,10 @@
 export function 
 /**debounce防抖函数
-* 如果直接执行refresh,那么refrsh函数执行频率就很高
-* 可以将refresh函数传入debounce函数中，生成一个新的函数
-* 降低了图片加载后的refresh函数的调用频率
+* 如果一个函数的触发频率很高，可以将这个函数传入防抖函数中去执行，
+* 防抖函数会判断若此函数在短时间内连续不断触发，则会等待延迟时间再去调用
+* 比如监听图片的加载，加载一张图片就监听一次，会影响性能
 */
-debounce (func, delay) {
+debounce (func, delay=100) {
  let timer = null
  return function (...args) {
    if (timer) clearTimeout(timer)

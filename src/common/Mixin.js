@@ -8,7 +8,7 @@ export const goodsImgLsnMixin = {
     }
   },
   mounted () {
-    this.scrollRefresh = debounce(this.$refs.scroll.refresh, 100)
+    this.scrollRefresh = debounce(this.$refs.scroll.refresh)
     this.goodsImgLsn = () => {
       this.scrollRefresh
     }

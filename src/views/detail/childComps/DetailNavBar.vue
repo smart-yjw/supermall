@@ -26,6 +26,8 @@ export default {
   methods: {
     titleClick (index) {
       this.currentIndex = index
+      //console.log('点击了'+this.currentIndex)
+      this.$emit('titleClick', index)
     },
     backClick () {
         this.$router.back()

@@ -38,7 +38,7 @@
       },
       //重新计算可滚动高度
       refresh () {
-        console.log("--")
+        //console.log("--")
         this.scroll && this.scroll.refresh() //监听refresh,计算滚动高度
       },
       //返回Y轴滚动的位置
@@ -57,10 +57,10 @@
       })
       //console.log(this.scroll.scrollerHeight)
       //2.监听滚动的位置
-      if (this.props === 2 || this.probeType === 3) {
+      if (this.probeType === 2 || this.probeType === 3) {
         this.scroll.on('scroll', (position) => {
-          //console.log(position)
-          this.$emit('getScrollPosition', position) //发射自定义事件然后在首页监听
+          //console.log(-position.y)
+          this.$emit('getScrollPosition', -position.y) //发射自定义事件然后在首页监听
         })
       }
       //3.监听是否滚动到底部
