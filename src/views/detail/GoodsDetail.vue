@@ -1,6 +1,7 @@
 <template>
   <div id="detail">
-    <detail-nav-bar ref="detailNavBar" class="detail-nav" @titleClick="titleClick"></detail-nav-bar>
+    <detail-nav-bar ref="detailNavBar" class="detail-nav" 
+      @titleClick="titleClick" :currentIndex="currentIndex"></detail-nav-bar>
     <scroll class="content" ref="scroll" @getScrollPosition="getScrollPosition" :probe-type="3">
       <!-- 顶部轮播图 -->
       <detail-swiper :topImages="topImages"></detail-swiper>
@@ -16,8 +17,10 @@
       <detail-comment-info ref="detailCommentInfo" :commentInfo="commentInfo"></detail-comment-info>
       <!-- 商品推荐信息,复用goods-list -->
       <goods-list ref="goodsList" :goods="recommendList"></goods-list>
-
     </scroll>
+    <detail-bottom-bar @addToCart="addToCart"></detail-bottom-bar>
+    
+    <back-top @click.native="backClick" v-show="isShowBacktop"></back-top>
   </div>
 </template>
 
@@ -31,23 +34,27 @@ import DetailShopInfo from './childComps/DetailShopInfo.vue'
 import DetailGoodsInfo from './childComps/DetailGoodsInfo.vue'
 import DetailParamInfo from './childComps/DetailParamInfo.vue'
 import DetailCommentInfo from './childComps/DetailCommentInfo.vue'
+import DetailBottomBar from './childComps/DetailBottomBar.vue'
 import GoodsList from 'components/content/goods/GoodsList.vue'
 import Scroll from 'components/common/scroll/Scroll.vue'
 import {debounce} from 'common/Utils'
 import {goodsImgLsnMixin} from 'common/Mixin'
+import BackTop from '../../components/content/backTop/BackTop.vue'
 
   export default {
     name: 'GoodsDetail',
     components:{
       DetailNavBar,
       DetailSwiper,
-        DetailBaseInfo,
-        DetailShopInfo,
-        Scroll,
-        DetailGoodsInfo,
-        DetailParamInfo,
-        DetailCommentInfo,
-        GoodsList,
+      DetailBaseInfo,
+      DetailShopInfo,
+      Scroll,
+      DetailGoodsInfo,
+      DetailParamInfo,
+      DetailCommentInfo,
+      GoodsList,
+      DetailBottomBar,
+        BackTop,
     },
     mixins: [goodsImgLsnMixin],
     props:{},
@@ -61,11 +68,11 @@ import {goodsImgLsnMixin} from 'common/Mixin'
         paramInfo: {},
         commentInfo: {},
         recommendList: [],
+        isShowBacktop: false,
         goodsImgLsn: null, //监听图片加载函数
-       
         themOffsetTop: [], //保存的title对应元素的位置
         getThemOffsetTop: null, //获取title对应元素高度的函数
-        currentIndex: 0
+        currentIndex: 0 //保存当前点击title的下标
       }
     },
     watch:{},
@@ -84,36 +91,28 @@ import {goodsImgLsnMixin} from 'common/Mixin'
         this.$refs.scroll.scrollTo(0, -this.themOffsetTop[index], 200)
       },
       getScrollPosition (position) {
-        // this.paramOffsetTop = this.$refs.detailParamInfo.$el.offsetTop
-        // this.commentOffsetTop = this.$refs.detailCommentInfo.$el.offsetTop
-        // this.recommendOffsetTop = this.$refs.goodsList.$el.offsetTop
-        // if(position < this.paramOffsetTop) {
-        //   console.log('选中商品')
-        //   this.$refs.detailNavBar.currentIndex === 0
-        // } else if(position >= this.paramOffsetTop && position < this.commentOffsetTop){
-        //   console.log('选中参数')
-        //   this.$refs.detailNavBar.currentIndex === 1
-        // } else if(position >= this.commentOffsetTop && position < this.recommendOffsetTop){
-        //   console.log('选中评论')
-        //   this.$refs.detailNavBar.currentIndex === 2
-        // } else if(position >= this.recommendOffsetTop){
-        //   console.log('选中推荐')
-        //   this.$refs.detailNavBar.currentIndex === 3
-        // }
-        
-        console.log(position)
+        //console.log(position)
         //[0, 16042, 17316, 17550]
         //滚动到某个位置，要选中对应的title
-        let scrollPositionY = -position.y
         let length = this.themOffsetTop.length
-        console.log(length)
-        // for(let i = 0, i < length; i ++) {
-        //   if ((i < length -1 && scrollPositionY > this.themOffsetTop[i] && 
-        //     scrollPositionY < this.themOffsetTop[i+1]) || (i === length-1 && scrollPositionY > this.themOffsetTop[i])) {
-        //       console.log(i)
-        //     }
-        // }
-
+        //console.log(length)
+        for (let i = 0; i < length-1; i++) {
+          let ipos = this.themOffsetTop[i]
+          if(position >= ipos && position < this.themOffsetTop[i+1]) {
+            if(this.currentIndex !== i) {
+              this.currentIndex = i
+              console.log(this.currentIndex)
+            }
+            break
+          }
+        }
+        /*滚动超过1000显示回到顶部按钮*/
+        this.isShowBacktop = (position) > 1000 
+      },
+      addToCart () {
+        console.log('点击了添加')
+        //收集购物车需要展示的数据
+        
       }
     },
     created(){
@@ -139,10 +138,7 @@ import {goodsImgLsnMixin} from 'common/Mixin'
         this.commentInfo = data.rate.list[0];
       })
       //当dom数据更新后，对新的dom进行操作要在$.nextTick中执行
-      this.$nextTick(() => {
-
-      })
-      
+      this.$nextTick(() => {})
       //获取商品推荐信息，因为和首页商品一样，这里接口只返回了固定的24条数据
       getRecommend().then((res, error) => {
         //if (error) return
@@ -164,6 +160,7 @@ import {goodsImgLsnMixin} from 'common/Mixin'
           this.themOffsetTop.push(this.$refs.detailParamInfo.$el.offsetTop)
           this.themOffsetTop.push(this.$refs.detailCommentInfo.$el.offsetTop)
           this.themOffsetTop.push(this.$refs.goodsList.$el.offsetTop)
+          this.themOffsetTop.push(Number.MAX_VALUE)
           //console.log(this.themOffsetTop)
       })
       

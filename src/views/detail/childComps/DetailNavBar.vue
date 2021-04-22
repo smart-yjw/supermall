@@ -17,10 +17,15 @@ import NavBar from 'components/common/navbar/NavBar'
 export default {
   name: 'DetailNavBar',
   components: { NavBar },
+  props: {
+    currentIndex: {
+      type: Number,
+      default: 0
+    }
+  },
   data () {
     return {
       titles: ['商品', '参数', '评论', '推荐',],
-      currentIndex: 0
     }
   },
   methods: {

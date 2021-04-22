@@ -96,10 +96,9 @@
       getScrollPosition (position) { 
         //console.log(position)
         /*滚动超过1000显示回到顶部按钮*/
-        this.isShowBacktop = (-position.y) > 1000 
+        this.isShowBacktop = (position) > 1000 
         /**判断tabControl是否吸顶 */
-        this.isTabFixed = (-position.y) > this.tabControlOffsetTop
-
+        this.isTabFixed = (position) > this.tabControlOffsetTop
       },
       //4、监听滚动到底部后加载更多
       loadMore () {
@@ -146,8 +145,8 @@
       this.getHomeGoods ('pop') //请求流行商品数据
       this.getHomeGoods ('new') //请求新款商品数据
       this.getHomeGoods ('sell') //请求精选商品数据
-
     },
+    
     mounted(){
       //1.图片加载事件监听,混入到mixin中了
       // const refresh = debounce(this.$refs.scroll.refresh, 50)
@@ -179,9 +178,6 @@
       //1.离开时记录滚动的位置
       this.saveY = this.$refs.scroll.getScrollY()
       //console.log('deactivated')
-      //console.log(this.saveCurrentIndex)
-    
-      //console.log(this.saveY)
       //2.取消全局事件的监听
       this.$bus.$off('goodsImgLoad', this.goodsImgLsn)
     }
