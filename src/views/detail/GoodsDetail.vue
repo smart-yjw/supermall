@@ -1,5 +1,6 @@
 <template>
   <div id="detail">
+    <div>{{$store.state.cartList.length}}</div>
     <detail-nav-bar ref="detailNavBar" class="detail-nav" 
       @titleClick="titleClick" :currentIndex="currentIndex"></detail-nav-bar>
     <scroll class="content" ref="scroll" @getScrollPosition="getScrollPosition" :probe-type="3">
@@ -111,7 +112,15 @@ import BackTop from '../../components/content/backTop/BackTop.vue'
       },
       addToCart () {
         console.log('点击了添加')
-        //收集购物车需要展示的数据
+        //1.收集购物车需要展示的数据
+        const product = {}
+        product.image = this.topImages[0]
+        product.title = this.detailInfo.title
+        product.desc = this.detailInfo.desc
+        product.price = this.detailInfo.realPrice
+        product.iid = this.iid
+        //2.将商品添加到购物车
+        this.$store.commit('addCart', product)
         
       }
     },

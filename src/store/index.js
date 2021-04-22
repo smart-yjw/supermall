@@ -8,6 +8,9 @@ export default new Vuex.Store({
     cartList: []
   },
   mutations: {
+    addCart (state, paload) {
+      state.cartList.push(paload)
+    }
   },
   actions: {
   },
