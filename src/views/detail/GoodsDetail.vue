@@ -1,8 +1,9 @@
 <template>
+
   <div id="detail">
-    <div>{{$store.state.cartList.length}}</div>
-    <detail-nav-bar ref="detailNavBar" class="detail-nav" 
+      <detail-nav-bar ref="detailNavBar" class="detail-nav" 
       @titleClick="titleClick" :currentIndex="currentIndex"></detail-nav-bar>
+      
     <scroll class="content" ref="scroll" @getScrollPosition="getScrollPosition" :probe-type="3">
       <!-- 顶部轮播图 -->
       <detail-swiper :topImages="topImages"></detail-swiper>
@@ -19,10 +20,11 @@
       <!-- 商品推荐信息,复用goods-list -->
       <goods-list ref="goodsList" :goods="recommendList"></goods-list>
     </scroll>
+
     <detail-bottom-bar @addToCart="addToCart"></detail-bottom-bar>
-    
     <back-top @click.native="backClick" v-show="isShowBacktop"></back-top>
   </div>
+
 </template>
 
 <script>
@@ -114,13 +116,15 @@ import BackTop from '../../components/content/backTop/BackTop.vue'
         console.log('点击了添加')
         //1.收集购物车需要展示的数据
         const product = {}
+        product.iid = this.iid
         product.image = this.topImages[0]
         product.title = this.detailInfo.title
         product.desc = this.detailInfo.desc
         product.price = this.detailInfo.realPrice
-        product.iid = this.iid
+        
         //2.将商品添加到购物车
-        this.$store.commit('addCart', product)
+        //通过store.dispatch分发Action
+        this.$store.dispatch('addCart', product)
         
       }
     },
@@ -132,7 +136,7 @@ import BackTop from '../../components/content/backTop/BackTop.vue'
       getGoodsDetail(this.iid).then(res => {
         //先将返回的数据保存起来 -> 返回的数据太过复杂，下面会抽取出来分开保存
         let data = res.data.result
-        //console.log(data)
+        console.log(data)
         //取出顶部轮播图
         this.topImages = data.itemInfo.topImages
         //获取商品信息

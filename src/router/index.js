@@ -3,7 +3,7 @@ import VueRouter from 'vue-router'
 // which is lazy-loaded when the route is visited.
 const Home = () => import('../views/home/Home')
 const Category = () => import('../views/category/Category')
-const Shopcart = () => import( '../views/shopcart/Shopcart')
+const Cart = () => import( '../views/cart/Cart')
 const Profile = () => import('../views/profile/Profile')
 const GoodsDetail = () => import('../views/detail/GoodsDetail')
 
@@ -29,9 +29,9 @@ const routes = [
     component: Category
   },
   {
-    path: '/shopcart',
-    name: 'Shopcart',
-    component: Shopcart
+    path: '/cart',
+    name: 'Cart',
+    component: Cart
   },
   {
     path: '/profile',
