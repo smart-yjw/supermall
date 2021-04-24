@@ -4,8 +4,8 @@
     <nav-bar class="car-nav">
       <div slot="center">购物车({{cLength}})</div>
     </nav-bar>
-
     <cart-list></cart-list>
+    <cart-bottom></cart-bottom>
   </div>
 
 </template>
@@ -13,10 +13,11 @@
 <script>
   import {mapGetters} from 'vuex'
   import NavBar from '../../components/common/navbar/NavBar.vue'
+  import CartBottom from './chidComps/CartBottom.vue'
   import CartList from './chidComps/CartList.vue'
   export default {
     name: 'Cart',
-    components:{NavBar, CartList},
+    components:{NavBar, CartList, CartBottom},
     props:{},
     data(){
       return {
@@ -29,9 +30,6 @@
         cLength: 'cartLength'
       })
     },
-    methods:{},
-    created(){},
-    mounted(){}
   }
 </script>
   

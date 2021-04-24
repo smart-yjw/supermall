@@ -23,6 +23,7 @@
 
     <detail-bottom-bar @addToCart="addToCart"></detail-bottom-bar>
     <back-top @click.native="backClick" v-show="isShowBacktop"></back-top>
+    <toast msg="哈哈哈"></toast>
   </div>
 
 </template>
@@ -43,6 +44,8 @@ import Scroll from 'components/common/scroll/Scroll.vue'
 import {debounce} from 'common/Utils'
 import {goodsImgLsnMixin} from 'common/Mixin'
 import BackTop from '../../components/content/backTop/BackTop.vue'
+import { mapActions } from 'vuex'
+import Toast from '../../components/common/toast/Toast.vue'
 
   export default {
     name: 'GoodsDetail',
@@ -57,7 +60,8 @@ import BackTop from '../../components/content/backTop/BackTop.vue'
       DetailCommentInfo,
       GoodsList,
       DetailBottomBar,
-        BackTop,
+      BackTop,
+      Toast
     },
     mixins: [goodsImgLsnMixin],
     props:{},
@@ -81,6 +85,7 @@ import BackTop from '../../components/content/backTop/BackTop.vue'
     watch:{},
     computed:{},
     methods:{
+      ...mapActions(['addToCart']),
       //监听穿着效果图片加载
       detailImgLoad () {
         //console.log('++')
@@ -113,18 +118,25 @@ import BackTop from '../../components/content/backTop/BackTop.vue'
         this.isShowBacktop = (position) > 1000 
       },
       addToCart () {
-        console.log('点击了添加')
+        //console.log('点击了添加')
         //1.收集购物车需要展示的数据
         const product = {}
         product.iid = this.iid
         product.image = this.topImages[0]
-        product.title = this.detailInfo.title
+        product.title = this.goods.title
         product.desc = this.detailInfo.desc
-        product.price = this.detailInfo.realPrice
+        product.price = this.goods.realPrice
         
         //2.将商品添加到购物车
         //通过store.dispatch分发Action
-        this.$store.dispatch('addCart', product)
+        // this.$store.dispatch('addCart', product).then(res => {
+        //   console.log(res)
+        // })
+        //通过mapAction辅助函数直接调用映射的方法
+        this.addCart(product).then(res => {
+          console.log(res)
+        })
+        
         
       }
     },
@@ -136,7 +148,7 @@ import BackTop from '../../components/content/backTop/BackTop.vue'
       getGoodsDetail(this.iid).then(res => {
         //先将返回的数据保存起来 -> 返回的数据太过复杂，下面会抽取出来分开保存
         let data = res.data.result
-        console.log(data)
+        //console.log(data)
         //取出顶部轮播图
         this.topImages = data.itemInfo.topImages
         //获取商品信息

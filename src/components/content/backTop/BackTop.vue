@@ -6,17 +6,7 @@
 
 <script>
 export default {
-  components:{},
-  props:{},
-  data(){
-    return {
-    }
-  },
-  watch:{},
-  computed:{},
-  methods:{},
-  created(){},
-  mounted(){}
+  name: 'BackTop'
 }
 </script>
   
