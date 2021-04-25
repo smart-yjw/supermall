@@ -85,7 +85,7 @@ import Toast from '../../components/common/toast/Toast.vue'
     watch:{},
     computed:{},
     methods:{
-      ...mapActions(['addToCart']),
+      ...mapActions(['addCart']),
       //监听穿着效果图片加载
       detailImgLoad () {
         //console.log('++')
@@ -134,7 +134,8 @@ import Toast from '../../components/common/toast/Toast.vue'
         // })
         //通过mapAction辅助函数直接调用映射的方法
         this.addCart(product).then(res => {
-          console.log(res)
+          console.log(this.$toast)
+          this.$toast.showToast(res)
         })
         
         

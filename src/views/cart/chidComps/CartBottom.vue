@@ -9,7 +9,7 @@
     <div class="total">
       合计：{{totalPrice}}
     </div>
-    <div class="accounts">
+    <div class="accounts" @click="accountClick">
       <span>去结算{{cartLength}}</span>
     </div>
   </div>
@@ -47,6 +47,13 @@ export default {
         this.cartList.forEach(element => element.checked = false);
       } else {
         this.cartList.forEach(element => element.checked = true)
+      }
+    },
+    accountClick () {
+      if (!this.selectAll) {
+        this.$toast.showToast('请选择商品')
+      } else {
+        this.$toast.showToast('去结算啦')
       }
     }
   }
